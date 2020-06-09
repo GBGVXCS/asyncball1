@@ -1,9 +1,12 @@
-var ball;
+var ball,database,position;
 
 function setup(){
     createCanvas(500,500);
     ball = createSprite(250,250,10,10);
     ball.shapeColor = "red";
+    database = firebase.database();
+    var ballPosition = database.ref('ball/position');
+    ballPosition.on("value",readValue, showError);
 }
 
 function draw(){
@@ -24,6 +27,31 @@ function draw(){
 }
 
 function changePosition(x,y){
-    ball.x = ball.x + x;
-    ball.y = ball.y + y;
+    console.log(x);
+    console.log(y);
+    database.ref('ball/position').set({
+        'x': position.x + x,
+        'y': position.y + y
+    })
+    
 }
+function readValue(data){
+    position = data.val();
+    console.log(position.x);
+    ball.x = position.x;
+    ball.y = position.y;
+}
+function showError(){
+    console.log("Error in the code");
+}
+
+
+
+
+
+
+
+
+
+
+
